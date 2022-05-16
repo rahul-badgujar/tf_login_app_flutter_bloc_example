@@ -50,6 +50,8 @@ class SignUpForm extends StatelessWidget {
               listener: (context, state) {
                 if (state is Authenticated) {
                   showMessageSnackbar(context, "Signed up successfully.");
+                } else if (state is AuthOperationErrored) {
+                  showMessageSnackbar(context, state.message);
                 }
               },
               child: CustomElevatedButton(

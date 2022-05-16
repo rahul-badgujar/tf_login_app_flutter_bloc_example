@@ -22,37 +22,40 @@ class AuthStatusBloc extends Bloc<AuthStatusEvent, AuthStatusState> {
   Future<void> _onLoginWithEmailPassword(
       LoginWithEmailPassword event, Emitter<AuthStatusState> emit) async {
     try {
-      if (state is NotAuthenticated) {
+      if (state is! Authenticated) {
         await authService.loginWithEmailPassword(
             email: event.email, password: event.password);
         emit(Authenticated());
       }
     } catch (e) {
       // handle error here
+      emit(AuthOperationErrored(message: e.toString()));
     }
   }
 
   Future<void> _onSignupWithEmailPassword(
       SignupWithEmailPassword event, Emitter<AuthStatusState> emit) async {
     try {
-      if (state is NotAuthenticated) {
+      if (state is! Authenticated) {
         await authService.signupWithEmailPassword(
             email: event.email, password: event.password);
         emit(Authenticated());
       }
     } catch (e) {
       // handle error here
+      emit(AuthOperationErrored(message: e.toString()));
     }
   }
 
   Future<void> _onLogout(Logout event, Emitter<AuthStatusState> emit) async {
     try {
-      if (state is Authenticated) {
+      if (state is! NotAuthenticated) {
         await authService.logout();
         emit(NotAuthenticated());
       }
     } catch (e) {
       // handle error here
+      emit(AuthOperationErrored(message: e.toString()));
     }
   }
 
@@ -66,11 +69,11 @@ class AuthStatusBloc extends Bloc<AuthStatusEvent, AuthStatusState> {
 
     // ignore: dead_code
     if (isAlreadyLoggedIn) {
-      if (state is NotAuthenticated) {
+      if (state is! Authenticated) {
         emit(Authenticated());
       }
     } else {
-      if (state is Authenticated) {
+      if (state is! NotAuthenticated) {
         emit(NotAuthenticated());
       }
     }

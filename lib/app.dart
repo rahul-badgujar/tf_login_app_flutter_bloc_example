@@ -25,7 +25,10 @@ class App extends StatelessWidget {
               authService: AuthServicePostgresImpl(),
             )..add(const PersistedAuthStatusCheck()),
             child: BlocBuilder<AuthStatusBloc, AuthStatusState>(
-              buildWhen: (previous, current) => current != previous,
+              buildWhen: (previous, current) {
+                if (current == previous) return false;
+                return current is Authenticated || current is NotAuthenticated;
+              },
               builder: (context, state) {
                 // if not authenticated, show login screen
                 if (state is NotAuthenticated) {

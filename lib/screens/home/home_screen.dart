@@ -42,6 +42,8 @@ class HomeScreen extends StatelessWidget {
                         if (state is Authenticated) {
                           showMessageSnackbar(
                               context, "Logged out successfully.");
+                        } else if (state is AuthOperationErrored) {
+                          showMessageSnackbar(context, state.message);
                         }
                       },
                       child: CustomElevatedButton(

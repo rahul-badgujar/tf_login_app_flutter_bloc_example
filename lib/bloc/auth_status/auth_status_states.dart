@@ -10,3 +10,11 @@ abstract class AuthStatusState extends Equatable {
 class Authenticated extends AuthStatusState {}
 
 class NotAuthenticated extends AuthStatusState {}
+
+class AuthOperationErrored extends AuthStatusState {
+  final String message;
+  const AuthOperationErrored({required this.message});
+
+  @override
+  List<Object> get props => [message];
+}
