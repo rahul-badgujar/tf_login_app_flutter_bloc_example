@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:login_page_bloc/auth_bloc/authstate_cubit.dart';
 import 'package:tf_responsive/tf_responsive.dart';
 
+import '../../auth_bloc/auth_states.dart';
 import '../../widgets/custom_elevated_button.dart';
 import '../../widgets/custom_text_field.dart';
 
@@ -33,9 +36,24 @@ class SignInForm extends StatelessWidget {
           ),
           SizedBox(height: tfHeight(3.3)),
           Flexible(
-            child: CustomElevatedButton(
-              lable: "Login",
-              onPressed: () {},
+            child: BlocBuilder<AuthStateCubit, AuthActionState>(
+              buildWhen: ((previous, current) {
+                if (current == previous) return false;
+                // build only when button changes to and fro disabled-enabled state
+                final loginInitiated = (current is AuthChangeInitiated);
+                final loginFinished = (previous is AuthChangeInitiated);
+                return loginInitiated || loginFinished;
+              }),
+              builder: ((context, state) {
+                return CustomElevatedButton(
+                  lable: "Login",
+                  onPressed: (state is AuthActionIdle)
+                      ? () async {
+                          await onLoginPressed(context);
+                        }
+                      : null,
+                );
+              }),
             ),
           ),
           SizedBox(height: tfHeight(2.6)),
@@ -46,6 +64,14 @@ class SignInForm extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Future<void> onLoginPressed(BuildContext context) async {
+    final email = _emailTextEditingController.text.trim();
+    final password = _passwordTextEditingController.text.trim();
+    await context
+        .read<AuthStateCubit>()
+        .login(email: email, password: password);
   }
 
   Widget _buildForgotPasswordButton() {

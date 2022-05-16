@@ -10,17 +10,21 @@ class CustomElevatedButton extends StatelessWidget {
     required this.lable,
   }) : super(key: key);
 
-  final void Function() onPressed;
+  final void Function()? onPressed;
   final String lable;
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      child: Text(
-        lable,
-      ),
+      child: onPressed == null
+          ? const CircularProgressIndicator()
+          : Text(
+              lable,
+            ),
       style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
+        backgroundColor: onPressed == null
+            ? MaterialStateProperty.all<Color>(Colors.white.withOpacity(0.8))
+            : MaterialStateProperty.all<Color>(Colors.white),
         foregroundColor:
             MaterialStateProperty.all<Color>(ColorPalette.primaryColor),
         textStyle: MaterialStateProperty.all<TextStyle>(

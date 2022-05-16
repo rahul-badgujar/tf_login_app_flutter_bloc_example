@@ -11,4 +11,9 @@ class EmailPasswordLoginFirebaseImpl implements EmailPasswordLogin {
     // mock delay
     return Future.delayed(const Duration(seconds: 2));
   }
+
+  @override
+  Future<void> logout() {
+    return Future.delayed(const Duration(seconds: 1));
+  }
 }
