@@ -17,4 +17,14 @@ class AuthServicePostgresImpl implements AuthService {
   Future<void> logout() {
     return Future.delayed(const Duration(seconds: 1));
   }
+
+  @override
+  Future<void> signupWithEmailPassword(
+      {required String email, required String password}) {
+    // mock error
+    bool showThrowError = generateRandomInt(end: 5) == 0;
+    if (showThrowError) throw "Something went wrong!";
+    // mock delay
+    return Future.delayed(const Duration(seconds: 3));
+  }
 }

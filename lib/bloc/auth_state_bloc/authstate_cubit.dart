@@ -20,6 +20,17 @@ class AuthStateCubit extends Cubit<AuthState> {
     }
   }
 
+  Future<void> signupWithEmailPassword(
+      {required String email, required String password}) async {
+    try {
+      await authService.signupWithEmailPassword(
+          email: email, password: password);
+      emit(Authenticated());
+    } catch (e) {
+      // handle error here
+    }
+  }
+
   Future<void> logout() async {
     try {
       await authService.logout();
