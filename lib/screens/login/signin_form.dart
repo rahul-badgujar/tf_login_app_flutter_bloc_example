@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:login_page_bloc/bloc/auth_status/auth_status_bloc.dart';
+import 'package:login_page_bloc/utils/util_funcs.dart';
 import 'package:tf_responsive/tf_responsive.dart';
 import '../../widgets/custom_elevated_button.dart';
 import '../../widgets/custom_text_field.dart';
@@ -34,18 +35,21 @@ class SignInForm extends StatelessWidget {
           ),
           SizedBox(height: tfHeight(3.3)),
           Flexible(
-            child: BlocBuilder<AuthStatusBloc, AuthStatusState>(
-              buildWhen: ((previous, current) {
+            child: BlocListener<AuthStatusBloc, AuthStatusState>(
+              listenWhen: ((previous, current) {
                 return current != previous;
               }),
-              builder: ((context, state) {
-                return CustomElevatedButton(
-                  lable: "Login",
-                  onPressed: () {
-                    onLoginPressed(context);
-                  },
-                );
-              }),
+              listener: (context, state) {
+                if (state is Authenticated) {
+                  showMessageSnackbar(context, "Logged in successfully.");
+                }
+              },
+              child: CustomElevatedButton(
+                lable: "Login",
+                onPressed: () {
+                  onLoginPressed(context);
+                },
+              ),
             ),
           ),
           SizedBox(height: tfHeight(2.6)),

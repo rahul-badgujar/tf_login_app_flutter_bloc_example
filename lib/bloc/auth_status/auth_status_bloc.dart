@@ -5,8 +5,6 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:login_page_bloc/auth/auth_service.dart';
-import 'package:login_page_bloc/utils/util_funcs.dart';
-
 part 'auth_status_events.dart';
 part 'auth_status_states.dart';
 
@@ -24,9 +22,11 @@ class AuthStatusBloc extends Bloc<AuthStatusEvent, AuthStatusState> {
   Future<void> _onLoginWithEmailPassword(
       LoginWithEmailPassword event, Emitter<AuthStatusState> emit) async {
     try {
-      await authService.loginWithEmailPassword(
-          email: event.email, password: event.password);
-      emit(Authenticated());
+      if (state is NotAuthenticated) {
+        await authService.loginWithEmailPassword(
+            email: event.email, password: event.password);
+        emit(Authenticated());
+      }
     } catch (e) {
       // handle error here
     }
@@ -35,9 +35,11 @@ class AuthStatusBloc extends Bloc<AuthStatusEvent, AuthStatusState> {
   Future<void> _onSignupWithEmailPassword(
       SignupWithEmailPassword event, Emitter<AuthStatusState> emit) async {
     try {
-      await authService.signupWithEmailPassword(
-          email: event.email, password: event.password);
-      emit(Authenticated());
+      if (state is NotAuthenticated) {
+        await authService.signupWithEmailPassword(
+            email: event.email, password: event.password);
+        emit(Authenticated());
+      }
     } catch (e) {
       // handle error here
     }
@@ -45,8 +47,10 @@ class AuthStatusBloc extends Bloc<AuthStatusEvent, AuthStatusState> {
 
   Future<void> _onLogout(Logout event, Emitter<AuthStatusState> emit) async {
     try {
-      await authService.logout();
-      emit(NotAuthenticated());
+      if (state is Authenticated) {
+        await authService.logout();
+        emit(NotAuthenticated());
+      }
     } catch (e) {
       // handle error here
     }
@@ -62,9 +66,13 @@ class AuthStatusBloc extends Bloc<AuthStatusEvent, AuthStatusState> {
 
     // ignore: dead_code
     if (isAlreadyLoggedIn) {
-      emit(Authenticated());
+      if (state is NotAuthenticated) {
+        emit(Authenticated());
+      }
     } else {
-      emit(NotAuthenticated());
+      if (state is Authenticated) {
+        emit(NotAuthenticated());
+      }
     }
   }
 }

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:login_page_bloc/bloc/auth_status/auth_status_bloc.dart';
 import 'package:tf_responsive/tf_responsive.dart';
 import '../../resources/colors.dart';
+import '../../utils/util_funcs.dart';
 import '../../widgets/custom_elevated_button.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -33,17 +34,22 @@ class HomeScreen extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: tfHeight(3)),
-                    BlocBuilder<AuthStatusBloc, AuthStatusState>(
-                      buildWhen: ((previous, current) {
+                    BlocListener<AuthStatusBloc, AuthStatusState>(
+                      listenWhen: ((previous, current) {
                         return current != previous;
                       }),
-                      builder: ((context, state) {
-                        return CustomElevatedButton(
-                            lable: "Logout",
-                            onPressed: () async {
-                              onLogoutPressed(context);
-                            });
-                      }),
+                      listener: (context, state) {
+                        if (state is Authenticated) {
+                          showMessageSnackbar(
+                              context, "Logged out successfully.");
+                        }
+                      },
+                      child: CustomElevatedButton(
+                        lable: "Logout",
+                        onPressed: () async {
+                          onLogoutPressed(context);
+                        },
+                      ),
                     ),
                     SizedBox(height: tfHeight(5)),
                   ],
