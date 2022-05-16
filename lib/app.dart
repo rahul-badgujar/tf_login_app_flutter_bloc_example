@@ -22,6 +22,7 @@ class App extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           home: BlocProvider<AuthStateCubit>(
             create: (context) => AuthStateCubit(
+              // providing auth service here.
               authService: AuthServicePostgresImpl(),
             ),
             child: BlocBuilder<AuthStateCubit, AuthState>(
