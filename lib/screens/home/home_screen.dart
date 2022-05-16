@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tf_responsive/tf_responsive.dart';
-import '../../auth_bloc/auth_states.dart';
-import '../../auth_bloc/authstate_cubit.dart';
+import '../../bloc/auth_state_bloc/auth_states.dart';
+import '../../bloc/auth_state_bloc/authstate_cubit.dart';
 import '../../resources/colors.dart';
 import '../../widgets/custom_elevated_button.dart';
 
@@ -34,23 +34,16 @@ class HomeScreen extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: tfHeight(3)),
-                    BlocBuilder<AuthStateCubit, AuthActionState>(
+                    BlocBuilder<AuthStateCubit, AuthState>(
                       buildWhen: ((previous, current) {
-                        if (current == previous) return false;
-                        // build only when button changes to and fro disabled-enabled state
-                        final loginInitiated = (current is AuthChangeInitiated);
-                        final loginFinished = (previous is AuthChangeInitiated);
-                        return loginInitiated || loginFinished;
+                        return current != previous;
                       }),
                       builder: ((context, state) {
                         return CustomElevatedButton(
-                          lable: "Logout",
-                          onPressed: (state is AuthActionSuccessfull)
-                              ? () async {
-                                  await onLogoutPressed(context);
-                                }
-                              : null,
-                        );
+                            lable: "Logout",
+                            onPressed: () async {
+                              await onLogoutPressed(context);
+                            });
                       }),
                     ),
                     SizedBox(height: tfHeight(5)),

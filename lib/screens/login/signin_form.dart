@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:login_page_bloc/auth_bloc/authstate_cubit.dart';
 import 'package:tf_responsive/tf_responsive.dart';
-
-import '../../auth_bloc/auth_states.dart';
+import '../../bloc/auth_state_bloc/auth_states.dart';
+import '../../bloc/auth_state_bloc/authstate_cubit.dart';
 import '../../widgets/custom_elevated_button.dart';
 import '../../widgets/custom_text_field.dart';
 
@@ -36,22 +35,16 @@ class SignInForm extends StatelessWidget {
           ),
           SizedBox(height: tfHeight(3.3)),
           Flexible(
-            child: BlocBuilder<AuthStateCubit, AuthActionState>(
+            child: BlocBuilder<AuthStateCubit, AuthState>(
               buildWhen: ((previous, current) {
-                if (current == previous) return false;
-                // build only when button changes to and fro disabled-enabled state
-                final loginInitiated = (current is AuthChangeInitiated);
-                final loginFinished = (previous is AuthChangeInitiated);
-                return loginInitiated || loginFinished;
+                return current != previous;
               }),
               builder: ((context, state) {
                 return CustomElevatedButton(
                   lable: "Login",
-                  onPressed: (state is AuthActionIdle)
-                      ? () async {
-                          await onLoginPressed(context);
-                        }
-                      : null,
+                  onPressed: () async {
+                    await onLoginPressed(context);
+                  },
                 );
               }),
             ),
@@ -71,7 +64,7 @@ class SignInForm extends StatelessWidget {
     final password = _passwordTextEditingController.text.trim();
     await context
         .read<AuthStateCubit>()
-        .login(email: email, password: password);
+        .loginWithEmailPassword(email: email, password: password);
   }
 
   Widget _buildForgotPasswordButton() {

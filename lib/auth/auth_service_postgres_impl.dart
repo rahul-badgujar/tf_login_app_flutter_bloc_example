@@ -1,10 +1,11 @@
-import 'package:login_page_bloc/auth/email_password_login.dart';
+import 'package:login_page_bloc/auth/auth_service.dart';
 import 'package:login_page_bloc/utils/util_funcs.dart';
 
-class EmailPasswordLoginPostgresImpl implements EmailPasswordLogin {
+class AuthServicePostgresImpl implements AuthService {
   // you can keep your db connection here
   @override
-  Future<void> login({required String email, required String password}) {
+  Future<void> loginWithEmailPassword(
+      {required String email, required String password}) {
     // mock error
     bool showThrowError = generateRandomInt(end: 5) == 0;
     if (showThrowError) throw "Something went wrong!";

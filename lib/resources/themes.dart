@@ -10,7 +10,6 @@ class Themes {
       primaryColor: ColorPalette.primaryColor,
       visualDensity: VisualDensity.adaptivePlatformDensity,
       scaffoldBackgroundColor: ColorPalette.scaffoldBgColor,
-      // TODO: you can change your text theme here.
       textTheme: GoogleFonts.ubuntuTextTheme(),
       appBarTheme: defaultAppBarTheme,
     );

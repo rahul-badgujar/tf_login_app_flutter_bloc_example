@@ -2,7 +2,7 @@
 
 import 'package:bloc/bloc.dart';
 
-class AuthBlocObserver extends BlocObserver {
+class MyBlocObserver extends BlocObserver {
   @override
   void onEvent(Bloc bloc, Object? event) {
     super.onEvent(bloc, event);
